@@ -1,8 +1,8 @@
 const { Sequelize, DataTypes } = require('sequelize');
-
-const sequelize = new Sequelize('Quest_Bot', 'bot', 'u5Dme*svSNt@sEA', {
-  host: 'localhost',
-  dialect: 'mysql',
+const { database2, databaseName, databaseHost, databaseDialect } = require('./config.json');
+const sequelize = new Sequelize(databaseName, database2.username, database2.password, {
+  host: databaseHost,
+  dialect: databaseDialect,
 });
 
 const users = require('./dbBase').users(sequelize, DataTypes);
@@ -11,6 +11,9 @@ const quests = require('./dbBase').quests(sequelize, DataTypes);
 const games = require('./dbBase').games(sequelize, DataTypes);
 const events = require('./dbBase').events(sequelize, DataTypes);
 const guilds = require('./dbBase').guilds(sequelize, DataTypes);
+const questTemplates = require('./dbBase').questTemplates(sequelize, DataTypes);
+const userachievements = require('./dbBase').userachievements(sequelize, DataTypes);
+const achievements = require('./dbBase').achievements(sequelize, DataTypes);
 
 users.hasMany(userquests, { foreignKey: 'userId' });
 userquests.belongsTo(users, { foreignKey: 'userId' });
@@ -32,6 +35,18 @@ users.belongsTo(guilds, { foreignKey: 'guildId' });
 
 users.hasMany(events, { foreignKey: 'creatorId' });
 events.belongsTo(users, { foreignKey: 'creatorId' });
+
+games.hasMany(questTemplates, { foreignKey: 'gameId' });
+questTemplates.belongsTo(games, { foreignKey: 'gameId' });
+
+games.hasMany(achievements, { foreignKey: 'gameId' });
+achievements.belongsTo(games, { foreignKey: 'gameId' });
+
+users.hasMany(userachievements, { foreignKey: 'userId' });
+userachievements.belongsTo(users, { foreignKey: 'userId' });
+
+achievements.hasMany(userachievements, { foreignKey: 'achievementId' });
+userachievements.belongsTo(achievements, { foreignKey: 'achievementId' });
 
 Reflect.defineProperty(users.prototype, 'getQuests', {
   value: (status) => {
@@ -138,6 +153,9 @@ module.exports = {
   games,
   events,
   guilds,
+  achievements,
+  userachievements,
+  questTemplates,
   getActiveEvents,
   getUpcomingEvents,
   createEvent,

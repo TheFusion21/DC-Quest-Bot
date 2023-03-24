@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 const { Sequelize, DataTypes } = require('sequelize');
-
-const sequelize = new Sequelize('Quest_Bot', 'botcreate', 'FKttrD3vTL7w.28', {
-  host: 'localhost',
-  dialect: 'mysql',
+const { database1, databaseName, databaseHost, databaseDialect } = require('./config.json');
+const sequelize = new Sequelize(databaseName, database1.username, database1.password, {
+  host: databaseHost,
+  dialect: databaseDialect,
 });
 
 const users = require('./dbBase').users(sequelize, DataTypes);
@@ -77,8 +77,7 @@ sequelize.sync({ force }).then(async () => {
     games.upsert({ name: 'Counter-Strike: Global Offensive', label: 'csgo', imageUrl: 'https://static-cdn.jtvnw.net/ttv-boxart/32399_IGDB-188x250.jpg' }),
     games.upsert({ name: 'Overwatch 2', label: 'overwatch2', imageUrl: 'https://static-cdn.jtvnw.net/ttv-boxart/515025-285x380.jpg' }),
     games.upsert({ name: 'Apex Legends', label: 'apexlegends', imageUrl: 'https://static-cdn.jtvnw.net/ttv-boxart/511224-188x250.jpg' }),
-
-    guilds.upsert({ guildId: '1078677701793157161', announcementChannelId: null }),
+    games.upsert({ name: 'Dota 2', label: 'dota2', imageUrl: 'https://static-cdn.jtvnw.net/ttv-boxart/29595-188x250.jpg' }),
   ];
   await Promise.all(baseInserts);
 

@@ -1,5 +1,6 @@
 const { token, client_id } = require('./config.json');
-const { REST, Routes, Collection, Events, Client, GatewayIntentBits } = require('discord.js');
+// eslint-disable-next-line no-unused-vars
+const { REST, Routes, Collection, Events, Client, GatewayIntentBits, GuildMember } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -16,6 +17,10 @@ const commands = [];
 
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+const questingEvents = require('./eventing.js').questingEvents;
+
+const { achievements, guilds, users } = require('./dbObjects');
 
 for (const file of commandFiles) {
   const filePath = path.join(commandsPath, file);
@@ -90,6 +95,21 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 
 });
+
+/**
+  * @param {GuildMember} member
+  * @param {achievements} achievement
+ */
+// eslint-disable-next-line no-empty-function
+questingEvents.on('achievement', async (member, achievement) => {
+
+});
+
+// eslint-disable-next-line no-empty-function
+questingEvents.on('questcomplete', async (member, quest) => {
+
+});
+
 
 client.login(token);
 
